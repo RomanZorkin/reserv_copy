@@ -1,3 +1,4 @@
+import logging
 import tempfile
 from datetime import datetime, timedelta
 from typing import List
@@ -6,6 +7,8 @@ from smb.base import SharedFile
 
 from service.models import FilesMap, RemoteDir, TargetData
 from service.worker.remotehost import HostPC
+
+logger = logging.getLogger(__name__)
 
 
 class Archivator:
@@ -106,7 +109,9 @@ class Actualize(Archivator):
         return False
 
     def run(self) -> bool:
+        logger.debug('start run fun')
         files = self.source_host.remote_files(self.source_dir)
+        logger.debug(f'Get files {files}')
         if not files:
             return False
         for file in files:

@@ -25,7 +25,7 @@ class HostPC:
         """Метод осуществляет подключение к удаленному компьютеру."""
         try:
             conn = SMBConnection(self.username, self.pwd, self.namelocalpc, self.pcname)
-            conn.connect(self.host, 139)
+            conn.connect(self.host, 139, timeout=10)
             return conn
         except Exception:
             logger.warning(f'Fail conect to host {self.pcname}, {self.host}\n\n')
@@ -33,29 +33,42 @@ class HostPC:
 
     def remote_map(self, location: RemoteDir) -> List[Optional[SharedFile]]:
         """Метод возвращает список файлов и каталогов на удаленном компьютере."""
-        items = self.connection().listPath(location.drive, location.dir)
+        conn = self.connection()
+        if not conn:
+            return []
+        items = conn.listPath(location.drive, location.dir)
+        conn.close()
         if not items:
             return []
         return items
 
     def remote_dirs(self, location: RemoteDir) -> List[Optional[SharedFile]]:
         """Метод возвращает список каталогов на удаленном компьютере."""
-        dirs = self.connection().listPath(
+        conn = self.connection()
+        if not conn:
+            return []
+        dirs = conn.listPath(
             location.drive,
             location.dir,
             search=cnst.SMB_FILE_ATTRIBUTE_DIRECTORY,
         )
+        conn.close()
         if not dirs:
             return []
         return dirs
 
     def remote_files(self, location: RemoteDir) -> List[Optional[SharedFile]]:
         """Метод возвращает список файлов на удаленном компьютере."""
-        files = self.connection().listPath(
+        conn = self.connection()
+        if not conn:
+            return []
+        files = conn.listPath(
             location.drive,
             location.dir,
             search=cnst.SMB_FILE_ATTRIBUTE_ARCHIVE | cnst.SMB_FILE_ATTRIBUTE_INCL_NORMAL,
+            timeout=10,
         )
+        conn.close()
         if not files:
             return []
         return files
@@ -70,9 +83,12 @@ class HostPC:
         except Exception:
             return False
 
-    def delete_file(self, remote_file: SharedFile, location: RemoteDir):
+    def delete_file(self, remote_file: SharedFile, location: RemoteDir) -> bool:
         """Метод удаляет файл на удаленном компьютере."""
+        conn = self.connection()
+        if not conn:
+            return False
         file_path = f'{location.dir}{remote_file.filename}'
-        self.connection().deleteFiles(location.drive, file_path, delete_matching_folders=True)
-        self.connection().close()
+        conn.deleteFiles(location.drive, file_path, delete_matching_folders=True)
+        conn.close()
         return True
