@@ -93,7 +93,7 @@ class Actualize(Archivator):
 
     def delete_old_file(self, source_file: SharedFile) -> bool:
         """Метод удаляет архивируемый файл при необходимости.
-        
+
         Arguments:
             source_file (SharedFile): файл для удаления.
 
@@ -106,7 +106,7 @@ class Actualize(Archivator):
 
     def search_old_source(self, source_file: SharedFile) -> bool:
         """Метод запускает процесс архивации если файл соответствует правилу времени.
-        
+
         В теле метода запускается цикл для каждого целевого каталога архивирования.
 
         Arguments:
