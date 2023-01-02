@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "reserv-copy"
+version = "0.1.0"
+description = ""
+authors = ["RomanZorkin <zorkin.roman@gmail.com>"]
+readme = "README.md"
+packages = [{include = "reserv_copy"}]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+pysmb = "1.2.8"
+pydantic = "^1.10.4"
+
+
+[tool.poetry.group.dev.dependencies]
+mypy = "^0.991"
+pylint = "^2.15.9"
+wemake-python-styleguide = "^0.17.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

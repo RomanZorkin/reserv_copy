@@ -1,4 +1,4 @@
-from typing import List, Union
+from typing import Any, List, Union
 
 from pydantic import BaseModel
 
@@ -31,7 +31,7 @@ class ActualizeRule(BaseModel):
     """."""
 
     source_storage_days: int
-    source_delete: bool = False    
+    source_delete: bool = False
 
 
 class FilesMap(BaseModel):
@@ -39,5 +39,5 @@ class FilesMap(BaseModel):
 
     source_host: RemoteHost
     source_dir: RemoteDir
-    rule: Union[ActualizeRule]
+    rule: Union[ActualizeRule, Any]
     target: List[TargetData]

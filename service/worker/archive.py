@@ -22,10 +22,9 @@ class Archivator:
         control_date = datetime.now() - timedelta(days=rule)
         if rule != 0:
             if control_date >= file_date:
-                print(f'curent date ', control_date, ' file date ', file_date)
                 return True
             else:
-                return False
+                return False  # noqa:WPS503 условие применяется для rule != 0
         if control_date.month == file_date.month:
             return True
         return False
@@ -70,7 +69,6 @@ class Actualize(Archivator):
         source_path = '{0}{1}'.format(self.source_dir.dir, source_file.filename)
         target_path = '{0}{1}'.format(target_dir.dir, source_file.filename)
         if target_host.file_exists(source_file, target_dir):
-            print('scip')
             return True
         try:
             with tempfile.NamedTemporaryFile() as tmp:
@@ -93,14 +91,11 @@ class Actualize(Archivator):
     def delete_old_file(self, source_file: SharedFile) -> bool:
         """Метод удаляет архивируемый файл при необходимости."""
         if not self.rule.source_delete:
-            print('do not delete')
             return True
-        print('delete')
         return self.source_host.delete_file(source_file, self.source_dir)
 
     def search_old_source(self, source_file: SharedFile) -> bool:
         if self.period_control(source_file, self.rule.source_storage_days):
-            print(source_file.filename)
             copy_errors = []
             for target in self.target_list:
                 if not self.copy_file(source_file, HostPC(target.target_host), target.target_dir):
@@ -110,15 +105,25 @@ class Actualize(Archivator):
             return False
         return False
 
-    def run(self) -> None:
+    def run(self) -> bool:
         files = self.source_host.remote_files(self.source_dir)
         if not files:
-            return None
+            return False
         for file in files:
+            if not file:
+                continue
             result = self.search_old_source(file)
             if not result:
-                message = f'Файл {file.filename} не обработан. Возраст файла не менее {self.rule.source_storage_days} дней, подлежит удалению в исходном каталоге - {self.rule.source_delete}'
+                message = """
+Файл {0} не обработан. Возраст файла не менее {1} дней, подлежит удалению \
+в исходном каталоге - {2}""".format(
+                    file.filename, self.rule.source_storage_days, self.rule.source_delete,
+                )
                 print(message)
+        return True
+
 
 class Overwrite(Archivator):
     """Класс содержит правила по перезаписи существующих файлов на актуальные."""
+
+    pass
