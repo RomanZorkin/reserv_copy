@@ -105,7 +105,7 @@ class Actualize(Archivator):
         return self.source_host.delete_file(source_file, self.source_dir)
 
     def search_old_source(self, source_file: SharedFile) -> bool:
-        """"Метод запускает процесс архивации если файл соответствует правилу времени.
+        """Метод запускает процесс архивации если файл соответствует правилу времени.
         
         В теле метода запускается цикл для каждого целевого каталога архивирования.
 
