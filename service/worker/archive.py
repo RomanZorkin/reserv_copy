@@ -92,12 +92,29 @@ class Actualize(Archivator):
             return False
 
     def delete_old_file(self, source_file: SharedFile) -> bool:
-        """Метод удаляет архивируемый файл при необходимости."""
+        """Метод удаляет архивируемый файл при необходимости.
+        
+        Arguments:
+            source_file (SharedFile): файл для удаления.
+
+        Returns:
+            bool:  True если файл удален успешно.
+        """
         if not self.rule.source_delete:
             return True
         return self.source_host.delete_file(source_file, self.source_dir)
 
     def search_old_source(self, source_file: SharedFile) -> bool:
+        """"Метод запускает процесс архивации если файл соответствует правилу времени.
+        
+        В теле метода запускается цикл для каждого целевого каталога архивирования.
+
+        Arguments:
+            source_file (SharedFile): файл для архивации.
+
+        Returns:
+            bool:  True если файл архиврован успешно.
+        """
         if self.period_control(source_file, self.rule.source_storage_days):
             copy_errors = []
             for target in self.target_list:
@@ -124,7 +141,7 @@ class Actualize(Archivator):
 в исходном каталоге - {2}""".format(
                     file.filename, self.rule.source_storage_days, self.rule.source_delete,
                 )
-                print(message)
+                logger.debug(message)
         return True
 
 
