@@ -82,6 +82,46 @@ rule = [
 ]
 
 
+home_rule = [
+    {
+        'name': 'test',
+        'method': 1,
+        'filesmap': {
+            'source_host': {
+                'host': '192.168.3.51',
+                'pcname': 'NOUT-PC',
+                'username': 'NOUT',
+                'pwd': 'veronica',
+                'namelocalpc': 'astra',
+            },
+            'source_dir': {
+                'drive': 'test',
+                'dir': '/1C Предприятие/Бухгалтерия/Архивы/Текущая архивация/',
+            },
+            'rule': {
+                'source_storage_days': 31,
+                'source_delete': True,
+            },
+            'target': [
+                {
+                    'target_host': {
+                        'host': '192.168.3.51',
+                        'pcname': 'NOUT-PC',
+                        'username': 'NOUT',
+                        'pwd': 'veronica',
+                        'namelocalpc': 'astra',
+                    },
+                    'target_dir': {
+                        'drive': 'h',
+                        'dir': '/Архив 1с/Бухгалтерия/2022/',
+                    },
+                },
+            ],
+        },
+    },
+]
+
+
 def write_config(config_rule: List[Dict[str, Any]], config_path: Path) -> None:
     with open(config, 'w') as file:
         yaml.dump(config_rule, file, default_flow_style=False)
