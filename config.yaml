@@ -3,55 +3,27 @@
       source_delete: false
       source_storage_days: -1
     source_dir:
-      dir: "/1C \u041F\u0440\u0435\u0434\u043F\u0440\u0438\u044F\u0442\u0438\u0435\
-        /\u0411\u0443\u0445\u0433\u0430\u043B\u0442\u0435\u0440\u0438\u044F/\u0410\
-        \u0440\u0445\u0438\u0432\u044B/\u0422\u0435\u043A\u0443\u0449\u0430\u044F\
-        \ \u0430\u0440\u0445\u0438\u0432\u0430\u0446\u0438\u044F/"
-      drive: i
+      dir: /dev4/
+      drive: test
     source_host:
-      host: 192.168.0.1
-      namelocalpc: pm11
-      pcname: server
-      pwd: '1111'
-      username: admin
+      host: 192.168.31.32
+      namelocalpc: astra
+      pcname: NOUT-PC
+      pwd: veronica
+      username: NOUT
     target:
-    - target_dir:
-        dir: /data_base/1C_Enterprize/1_enterprise/archives/
-        drive: f
+    - rule:
+        source_delete: true
+        source_storage_days: 61
+      target_dir:
+        dir: "/NOUT/\u041C\u043E\u0438 \u0434\u043E\u043A\u0443\u043C\u0435\u043D\u0442\
+          \u044B/test/"
+        drive: Users
       target_host:
-        host: 192.168.0.1
-        namelocalpc: pm11
-        pcname: server
-        pwd: '1111'
-        username: admin
+        host: 192.168.31.32
+        namelocalpc: astra
+        pcname: NOUT-PC
+        pwd: veronica
+        username: NOUT
   method: 1
-  name: 1C_enterprize_actualize
-- filesmap:
-    rule:
-      source_delete: true
-      source_storage_days: 31
-    source_dir:
-      dir: "/1C \u041F\u0440\u0435\u0434\u043F\u0440\u0438\u044F\u0442\u0438\u0435\
-        /\u0411\u0443\u0445\u0433\u0430\u043B\u0442\u0435\u0440\u0438\u044F/\u0410\
-        \u0440\u0445\u0438\u0432\u044B/\u0422\u0435\u043A\u0443\u0449\u0430\u044F\
-        \ \u0430\u0440\u0445\u0438\u0432\u0430\u0446\u0438\u044F/"
-      drive: i
-    source_host:
-      host: 192.168.0.1
-      namelocalpc: pm11
-      pcname: server
-      pwd: '1111'
-      username: admin
-    target:
-    - target_dir:
-        dir: "/\u0410\u0440\u0445\u0438\u0432 1\u0441/\u0411\u0443\u0445\u0433\u0430\
-          \u043B\u0442\u0435\u0440\u0438\u044F/2022/"
-        drive: h
-      target_host:
-        host: 192.168.0.1
-        namelocalpc: pm11
-        pcname: server
-        pwd: '1111'
-        username: admin
-  method: 1
-  name: 1C_enterprize_actualize
+  name: test

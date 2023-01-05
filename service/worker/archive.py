@@ -36,7 +36,7 @@ class Archivator:
 class Actualize(Archivator):
     """Класс содержит правила по переносу файлов в зависимости от даты создания.
 
-    Atributes:
+    Attributes:
         source_host (HostPC): настройки удаленного компьютера, откуда копируются файлы.
         source_conn (SMBConnection): метод устанавливает соеденияние с удаленным компьютером.
         source_dir (RemoteDir): сведения о пути до дирректории откуда копируются файлы.
@@ -47,7 +47,7 @@ class Actualize(Archivator):
     def __init__(self, navigator: FilesMap):
         """Init Actualize class.
 
-        Args:
+        Arguments:
             navigator (FilesMap): набор правил архивации.
         """
         self.source_host = HostPC(navigator.source_host)
@@ -102,6 +102,7 @@ class Actualize(Archivator):
         """
         if not self.rule.source_delete:
             return True
+        logger.debug(f'delete file {source_file.filename} {self.source_dir}')
         return self.source_host.delete_file(source_file, self.source_dir)
 
     def search_old_source(self, source_file: SharedFile) -> bool:

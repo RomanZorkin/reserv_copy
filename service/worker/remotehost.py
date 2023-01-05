@@ -25,10 +25,10 @@ class HostPC:
         """Метод осуществляет подключение к удаленному компьютеру."""
         try:
             conn = SMBConnection(self.username, self.pwd, self.namelocalpc, self.pcname)
-            conn.connect(self.host, 139, timeout=10)
+            conn.connect(self.host, 139, timeout=20)
             return conn
         except Exception:
-            logger.warning(f'Fail conect to host {self.pcname}, {self.host}\n\n')
+            logger.warning(f'Fail connect to host {self.pcname}, {self.host}\n\n')
             return False
 
     def remote_map(self, location: RemoteDir) -> List[Optional[SharedFile]]:
