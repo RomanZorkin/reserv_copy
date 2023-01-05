@@ -14,6 +14,18 @@ logger = logging.getLogger(__name__)
 class Archivator:
     """Класс отвечает за управление процессом архивации файлов."""
 
+    def __init__(self, navigator: FilesMap):
+        """Init Actualize class.
+
+        Arguments:
+            navigator (FilesMap): набор правил архивации.
+        """
+        self.source_host = HostPC(navigator.source_host)
+        self.source_conn = self.source_host.connection
+        self.source_dir = navigator.source_dir
+        self.rule = navigator.rule
+        self.target_list: List[TargetData] = navigator.target
+
     def period_control(self, target_file: SharedFile, rule: int) -> bool:
         """Метод сравнивает дату файла и теущую дату.
 
@@ -31,6 +43,36 @@ class Archivator:
         if control_date.month == file_date.month:
             return True
         return False
+
+    def delete_old_file(
+        self, source_file: SharedFile, source_dir: RemoteDir, del_tag: bool,
+    ) -> bool:
+        """Метод удаляет файл на удаленном компьютере при необходимости.
+
+        Arguments:
+            source_file (SharedFile): файл для удаления.
+            source_dir (RemoteDir): местонахождение файла.
+            del_tag (bool): признак необходиомти удаления файла.
+
+        Returns:
+            bool:  True если файл удален успешно.
+        """
+        if not del_tag:
+            return True
+        logger.debug(f'delete file {source_file.filename} {source_dir}')
+        return self.source_host.delete_file(source_file, source_dir)
+
+    def garbage_clean(self, rule: int = 2):
+        for target in self.target_list:
+            target_host = HostPC(target.target_host)
+            garbadge_files = target_host.remote_files(target.target_dir)
+            files_dict = {
+                file.filename: datetime.fromtimestamp(file.last_write_time) for file in garbadge_files
+            }
+            print(files_dict)
+            new = {k: v for k, v in sorted(files_dict.items(), key=lambda item: item[1])}
+            old = len(list(new)) - rule
+            print(list(new)[:old])
 
 
 class Actualize(Archivator):
@@ -50,11 +92,7 @@ class Actualize(Archivator):
         Arguments:
             navigator (FilesMap): набор правил архивации.
         """
-        self.source_host = HostPC(navigator.source_host)
-        self.source_conn = self.source_host.connection
-        self.source_dir = navigator.source_dir
-        self.rule = navigator.rule
-        self.target_list: List[TargetData] = navigator.target
+        super().__init__(navigator)
 
     def copy_file(
         self, source_file: SharedFile, target_host: HostPC, target_dir: RemoteDir,
@@ -89,21 +127,7 @@ class Actualize(Archivator):
         except Exception:
             self.source_conn().close()
             target_host.connection().close()
-            return False
-
-    def delete_old_file(self, source_file: SharedFile) -> bool:
-        """Метод удаляет архивируемый файл при необходимости.
-
-        Arguments:
-            source_file (SharedFile): файл для удаления.
-
-        Returns:
-            bool:  True если файл удален успешно.
-        """
-        if not self.rule.source_delete:
-            return True
-        logger.debug(f'delete file {source_file.filename} {self.source_dir}')
-        return self.source_host.delete_file(source_file, self.source_dir)
+            return False    
 
     def search_old_source(self, source_file: SharedFile) -> bool:
         """Метод запускает процесс архивации если файл соответствует правилу времени.
@@ -122,7 +146,7 @@ class Actualize(Archivator):
                 if not self.copy_file(source_file, HostPC(target.target_host), target.target_dir):
                     copy_errors.append(True)
             if not copy_errors:
-                return self.delete_old_file(source_file)
+                return self.delete_old_file(source_file, self.source_dir, self.rule.source_delete)
             return False
         return False
 
@@ -143,6 +167,8 @@ class Actualize(Archivator):
                     file.filename, self.rule.source_storage_days, self.rule.source_delete,
                 )
                 logger.debug(message)
+        logger.debug('operation complete')
+        self.garbage_clean()
         return True
 
 

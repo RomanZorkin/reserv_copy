@@ -39,10 +39,6 @@ rule = [
                         'drive': 'f',
                         'dir': '/data_base/1C_Enterprize/1_enterprise/archives/',
                     },
-                    'rule': {
-                        'source_storage_days': 31,
-                        'source_delete': True,
-                    },
                 },
             ],
         },
@@ -79,10 +75,6 @@ rule = [
                         'drive': 'h',
                         'dir': '/Архив 1с/Бухгалтерия/2022/',
                     },
-                    'rule': {
-                        'source_storage_days': 61,
-                        'source_delete': True,
-                    }
                 },
             ],
         },
@@ -123,10 +115,6 @@ home_rule = [
                         'drive': 'Users',
                         'dir': '/NOUT/Мои документы/test/',
                     },
-                    'rule': {
-                        'source_storage_days': 61,
-                        'source_delete': True,
-                    }
                 },
             ],
         },

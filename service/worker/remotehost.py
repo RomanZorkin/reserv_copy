@@ -8,7 +8,7 @@ from smb.SMBConnection import SMBConnection
 
 from service.models import RemoteDir, RemoteHost
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger('service')
 
 
 class HostPC:
@@ -27,7 +27,7 @@ class HostPC:
             conn = SMBConnection(self.username, self.pwd, self.namelocalpc, self.pcname)
             conn.connect(self.host, 139, timeout=20)
             return conn
-        except Exception:
+        except OSError:
             logger.warning(f'Fail connect to host {self.pcname}, {self.host}\n\n')
             return False
 

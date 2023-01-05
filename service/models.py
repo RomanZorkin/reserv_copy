@@ -1,4 +1,4 @@
-from typing import Any, List, Optional, Union
+from typing import Any, List, Union
 
 from pydantic import BaseModel
 
@@ -21,7 +21,7 @@ class RemoteDir(BaseModel):
 
 
 class ActualizeRule(BaseModel):
-    """."""
+    """Правила переноса файлов ."""
 
     source_storage_days: int
     source_delete: bool = False
@@ -32,7 +32,6 @@ class TargetData(BaseModel):
 
     target_host: RemoteHost
     target_dir: RemoteDir
-    rule: Optional[ActualizeRule]
 
 
 class FilesMap(BaseModel):
