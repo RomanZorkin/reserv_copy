@@ -39,6 +39,7 @@ rule = [
                         'drive': 'f',
                         'dir': '/data_base/1C_Enterprize/1_enterprise/archives/',
                     },
+                    'target_limit_count': 6,
                 },
             ],
         },
@@ -75,6 +76,7 @@ rule = [
                         'drive': 'h',
                         'dir': '/Архив 1с/Бухгалтерия/2022/',
                     },
+                    'target_limit_count': 6,
                 },
             ],
         },
@@ -88,7 +90,7 @@ home_rule = [
         'method': 1,
         'filesmap': {
             'source_host': {
-                'host': '192.168.3.51',
+                'host': '192.168.31.32',
                 'pcname': 'NOUT-PC',
                 'username': 'NOUT',
                 'pwd': 'veronica',
@@ -96,25 +98,26 @@ home_rule = [
             },
             'source_dir': {
                 'drive': 'test',
-                'dir': '/1C Предприятие/Бухгалтерия/Архивы/Текущая архивация/',
+                'dir': '/dev4/',
             },
             'rule': {
-                'source_storage_days': 31,
-                'source_delete': True,
+                'source_storage_days': -1,
+                'source_delete': False,
             },
             'target': [
                 {
                     'target_host': {
-                        'host': '192.168.3.51',
+                        'host': '192.168.31.32',
                         'pcname': 'NOUT-PC',
                         'username': 'NOUT',
                         'pwd': 'veronica',
                         'namelocalpc': 'astra',
                     },
                     'target_dir': {
-                        'drive': 'h',
-                        'dir': '/Архив 1с/Бухгалтерия/2022/',
+                        'drive': 'Users',
+                        'dir': '/NOUT/Мои документы/test/',
                     },
+                    'target_limit_count': 6,
                 },
             ],
         },
@@ -127,4 +130,4 @@ def write_config(config_rule: List[Dict[str, Any]], config_path: Path) -> None:
         yaml.dump(config_rule, file, default_flow_style=False)
 
 
-write_config(rule, config)
+write_config(home_rule, config)
