@@ -65,6 +65,8 @@ class Archivator:
     def garbage_clean(self) -> bool:
         """."""
         for target in self.target_list:
+            if not target.target_limit_count:
+                return False
             target_host = HostPC(target.target_host)
             archive_files = target_host.remote_files(target.target_dir)
             if not archive_files:
@@ -89,8 +91,7 @@ class Archivator:
             archive_files (List[SharedFile]): список файлов, находящихся в заданной директории,
                 которые проверяются на необходимость удаления.
         """
-        if not target_rule.target_limit_count:
-            return []
+        
         files_dict = {}
         for archive_file in archive_files:
             files_dict[archive_file] = datetime.fromtimestamp(archive_file.last_write_time)
