@@ -39,6 +39,7 @@ rule = [
                         'drive': 'f',
                         'dir': '/data_base/1C_Enterprize/1_enterprise/archives/',
                     },
+                    'target_limit_count': 6,
                 },
             ],
         },
@@ -60,7 +61,7 @@ rule = [
             },
             'rule': {
                 'source_storage_days': 31,
-                'source_delete': True,
+                'source_delete': True,                
             },
             'target': [
                 {
@@ -73,8 +74,9 @@ rule = [
                     },
                     'target_dir': {
                         'drive': 'h',
-                        'dir': '/Архив 1с/Бухгалтерия/2022/',
+                        'dir': '/Архив 1с/Бухгалтерия/2022/',                        
                     },
+                    'target_limit_count': 6,
                 },
             ],
         },
@@ -115,6 +117,7 @@ home_rule = [
                         'drive': 'Users',
                         'dir': '/NOUT/Мои документы/test/',
                     },
+                    'target_limit_count': 6,
                 },
             ],
         },

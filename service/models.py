@@ -1,4 +1,4 @@
-from typing import Any, List, Union
+from typing import Any, List, Optional, Union
 
 from pydantic import BaseModel
 
@@ -32,6 +32,7 @@ class TargetData(BaseModel):
 
     target_host: RemoteHost
     target_dir: RemoteDir
+    target_limit_count: Optional[int]
 
 
 class FilesMap(BaseModel):
