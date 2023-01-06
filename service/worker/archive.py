@@ -116,14 +116,6 @@ class Actualize(Archivator):
             архивируются файлы.
     """
 
-    def __init__(self, navigator: FilesMap):
-        """Init Actualize class.
-
-        Arguments:
-            navigator (FilesMap): набор правил архивации.
-        """
-        super().__init__(navigator)
-
     def copy_file(
         self, source_file: SharedFile, target_host: HostPC, target_dir: RemoteDir,
     ) -> bool:
@@ -205,4 +197,5 @@ class Actualize(Archivator):
 class Overwrite(Archivator):
     """Класс содержит правила по перезаписи существующих файлов на актуальные."""
 
-    pass
+    def run(self):
+        return True
