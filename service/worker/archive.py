@@ -26,33 +26,6 @@ class Archivator:
         self.rule = navigator.rule
         self.target_list: List[TargetData] = navigator.target
 
-    def _get_garbage_files(
-        self, target_rule: TargetData, archive_files: List[SharedFile],
-    ) -> List[SharedFile]:
-        """Метод формирует список файлов подлежащих удалению в заданной дирректории.
-
-        Arguments:
-            target_rule (TargetData): набор правил для удаленной дирректории с архивными файлами,
-                нам необходим target_rule.target_limit_count, который устанавливает минимальное 
-                количество файлов, которые должны остаться в дирректории.
-            archive_files (List[SharedFile]): список файлов, находящихся в заданной директории,
-                которые проверяются на необходимость удаления.
-        """
-        if not target_rule.target_limit_count:
-            return []
-        files_dict = {}
-        for archive_file in archive_files:
-            files_dict[archive_file] = datetime.fromtimestamp(archive_file.last_write_time)
-        garbage_dict = {
-            file: file_date for file, file_date in sorted(
-                files_dict.items(), key=lambda item: item[1],
-            )
-        }
-        old_items = len(list(garbage_dict)) - target_rule.target_limit_count
-        if old_items < 0:
-            return []
-        return list(garbage_dict)[:old_items]
-
     def period_control(self, target_file: SharedFile, rule: int) -> bool:
         """Метод сравнивает дату файла и теущую дату.
 
@@ -99,12 +72,37 @@ class Archivator:
             garbage_files = self._get_garbage_files(target, archive_files)
             if not garbage_files:
                 return False
-            print(garbage_files)
             for old_file in garbage_files:
-                print(old_file.filename)
                 if not self.delete_old_file(old_file, target.target_dir, del_tag=True):
                     return False
         return True
+
+    def _get_garbage_files(
+        self, target_rule: TargetData, archive_files: List[SharedFile],
+    ) -> List[SharedFile]:
+        """Метод формирует список файлов подлежащих удалению в заданной дирректории.
+
+        Arguments:
+            target_rule (TargetData): набор правил для удаленной дирректории с архивными файлами,
+                нам необходим target_rule.target_limit_count, который устанавливает минимальное
+                количество файлов, которые должны остаться в дирректории.
+            archive_files (List[SharedFile]): список файлов, находящихся в заданной директории,
+                которые проверяются на необходимость удаления.
+        """
+        if not target_rule.target_limit_count:
+            return []
+        files_dict = {}
+        for archive_file in archive_files:
+            files_dict[archive_file] = datetime.fromtimestamp(archive_file.last_write_time)
+        garbage_dict = {
+            file: file_date for file, file_date in sorted(
+                files_dict.items(), key=lambda item: item[1],
+            )
+        }
+        old_items = len(list(garbage_dict)) - target_rule.target_limit_count
+        if old_items < 0:
+            return []
+        return list(garbage_dict)[:old_items]
 
 
 class Actualize(Archivator):
